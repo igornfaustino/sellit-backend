@@ -1,18 +1,26 @@
+const { singup, getUserItems, login, getUser } = require('./controllers/users');
+const {
+  getAllItems,
+  getCreatedBy,
+  createItem,
+  deleteItem
+} = require('./controllers/item');
+
 module.exports = {
   User: {
-    items: (parent, args, context, info) => parent.getItems()
+    items: getUserItems
   },
   Item: {
-    user: (parent, args, context, info) => parent.getUser()
+    user: getCreatedBy
   },
   Query: {
-    items: (parent, args, { db }, info) => db.Items.findAll(),
-    user: (parent, { id }, { db }, info) => db.User.findByPk(id)
+    items: getAllItems,
+    user: getUser
   },
   Mutation: {
-    createUser: (parent, { name, email, password, whatsapp }, { db }, info) =>
-      db.User.create({ name, email, password, whatsapp }),
-    createItem: (parent, { name, description, value, userId }, { db }, info) =>
-      db.Item.create({ name, description, value, userId })
+    singup,
+    login,
+    createItem,
+    deleteItem
   }
 };

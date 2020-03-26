@@ -4,7 +4,11 @@ const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 const db = require('./models');
 
-const server = new ApolloServer({ typeDefs, resolvers, context: { db } });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: request => ({ ...request, db })
+});
 
 const app = express();
 server.applyMiddleware({ app });
