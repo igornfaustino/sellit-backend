@@ -1,6 +1,12 @@
 const { getUserId } = require('../utils/user');
 
-const getAllItems = (parent, args, { db }, info) => db.Item.findAll();
+const getAllItems = async (parent, { limit, offset }, { db }, info) => {
+  const { count, rows } = await db.Item.findAndCountAll({ limit, offset });
+  return {
+    count,
+    items: rows
+  };
+};
 
 const getCreatedBy = async (parent, args, context, info) => parent.getUser();
 
@@ -15,9 +21,10 @@ const createItem = (
 };
 
 const deleteItem = async (parent, { id }, { db, ...context }, info) => {
-  getUserId(context);
+  const userID = getUserId(context);
 
-  const item = await db.Item.findByPk(id);
+  const item = await db.Item.findByPk(id, { where: { userID } });
+  if (!item) throw new Error('Item Not Found');
   item.destroy();
   return true;
 };

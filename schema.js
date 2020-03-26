@@ -18,8 +18,12 @@ module.exports = `
     userId: ID!
     user: User!
   }
-  type Query {
+  type Items {
+    count: Int!
     items: [Item!]!
+  }
+  type Query {
+    items(offset: Int!, limit: Int!): Items!
     user: User!
   }
   type Mutation {
